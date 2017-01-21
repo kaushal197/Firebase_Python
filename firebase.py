@@ -23,20 +23,19 @@ app = Flask(__name__)
 #index page
 @app.route('/')
 def index():
-    #data = {"id": "1", "type": "found", "breed": "", "location": "Toronto"}
-    #db.push(data)
-    all_data = db.get()
-    data = []
-    for piece in all_data.each():
-        data.append(piece.key())
-        data.append(piece.val())
-    return print(data)
+    data = {"id": 1, "name": "", "breed_manual": "", "breed_auto": "", "last_location": ""}
+    db.child('lost').push(data)
+    data = db.get()
+    return jsonify(str(data.val()))
 #
 #Data page
 @app.route('/data')
 def names():
-    data = {"names": ["John", "Jacob", "Julie", "Jennifer"]}
-    return jsonify(data)
+    dataset = db.child('found').get().each()
+    data = {}
+    for piece in dataset:
+        data[piece.key()] = piece.val()
+    return str(data)
 
 
 if __name__ == '__main__':
